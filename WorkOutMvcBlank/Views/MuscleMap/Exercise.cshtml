@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Noto+Sans+JP:wght@100;200;300&family=Noto+Serif+JP:wght@200;300;400&display=swap"
+          rel="stylesheet">
+        <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true">
+        <link rel="stylesheet" href="~/muscle-map/css/nav.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/muscle-map/css/exercise.css" asp-append-version="true">
+    <title>KATACHI | &#21205;&#20316;&#25945;&#23416;</title>
+</head>
+
+<body>
+    <nav class="ex-nav">
+                <a class="ex-nav-logo" href="/MuscleMap">
+            KATACH<span class="dumbbell-i">
+            <svg viewBox="0 0 28 80" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="0" width="24" height="7" rx="1.5" fill="currentColor" />
+                <rect x="0" y="9" width="28" height="9" rx="2" fill="currentColor" />
+                <rect x="11" y="20" width="6" height="40" fill="currentColor" />
+                <rect x="0" y="62" width="28" height="9" rx="2" fill="currentColor" />
+                <rect x="2" y="73" width="24" height="7" rx="1.5" fill="currentColor" />
+            </svg>
+        </span>
+    </a>
+            <a class="ex-nav-link" href="/MuscleMap">&#32908;&#32905;&#30334;&#31185;</a>
+</nav>
+
+<div class="ex-layout">
+    <header class="ex-header">
+        <button class="ex-back-btn" onclick="history.back()">&#36820;&#22238;</button>
+        <span class="ex-header-title" id="ex-muscle-name"></span>
+    </header>
+
+    <main class="ex-main">
+        <div class="ex-title-row">
+            <h1 class="ex-title" id="ex-title"></h1>
+            <span class="ex-badge" id="ex-badge"></span>
+        </div>
+
+        <div class="ex-content-row">
+            <div class="ex-img-wrap">
+                <img class="ex-img" id="ex-img" src="" alt="" />
+            </div>
+
+            <div class="ex-right-col">
+                <section class="ex-desc-section">
+                    <h2 class="ex-desc-label">&#21205;&#20316;&#35498;&#26126;</h2>
+                    <p class="ex-desc" id="ex-desc"></p>
+                </section>
+
+                <div class="ex-stats-card" id="ex-stats-card" style="display:none">
+                    <div class="ex-difficulty-wrap" id="ex-difficulty-wrap" style="display:none">
+                        <span class="ex-stats-label">&#38627;&#24230;</span>
+                        <div class="ex-stars" id="ex-stars"></div>
+                    </div>
+
+                    <hr class="ex-stats-divider" id="ex-stats-divider" style="display:none">
+
+                    <div class="ex-muscles-wrap" id="ex-muscles-wrap" style="display:none">
+                        <span class="ex-stats-label">&#20027;&#35201;&#32908;&#32676;(&#32908;&#32905;&#21443;&#33287;&#27604;&#20363;)</span>
+                        <div class="ex-muscle-bars" id="ex-muscle-bars"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+        <script src="~/muscle-map/js/data.js?v=3"></script>
+        <script src="~/muscle-map/js/exercise.js?v=3"></script>
+</body>
+
+</html>
