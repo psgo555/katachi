@@ -17,7 +17,7 @@ app.UseStaticFiles();
 // 預設路由設定
 app.MapControllerRoute(
     name: "default",
-//pattern: "{controller=Shop}/{action=Index}/{id?}");
-pattern: "{controller=MuscleMap}/{action=Index}/{id?}");
+pattern: "{controller=Shop}/{action=Index}/{id?}");
+//pattern: "{controller=MuscleMap}/{action=Index}/{id?}");
 
 app.Run();

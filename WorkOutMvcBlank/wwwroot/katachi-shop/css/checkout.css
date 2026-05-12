@@ -20,9 +20,14 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: space-between;
   gap: var(--space-24);
-  padding: 16px var(--page-gutter-lg);
-  background: rgba(240,237,232,0.94);
-  border-bottom: var(--border-default);
+  width: 100%;
+  margin: 0 auto;
+  padding: 14px var(--page-gutter-lg);
+  border-radius: 0;
+  background: var(--color-black);
+  border: 0;
+  border-bottom: 1px solid var(--color-white-faint);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(12px);
 }
 
@@ -35,7 +40,7 @@ img { display: block; max-width: 100%; }
   font-weight: var(--weight-black);
   letter-spacing: var(--tracking-logo);
   line-height: 1;
-  color: var(--color-black);
+  color: var(--color-white);
 }
 
 .brand-mark {
@@ -61,7 +66,7 @@ img { display: block; max-width: 100%; }
   color: var(--color-grey-mute);
 }
 
-.step.is-active { color: var(--color-black); }
+.step.is-active { color: var(--color-white); }
 .step.is-done { color: var(--color-accent); }
 
 .step-num {
@@ -77,9 +82,9 @@ img { display: block; max-width: 100%; }
 }
 
 .step.is-active .step-num {
-  background: var(--color-black);
-  border-color: var(--color-black);
-  color: var(--color-white);
+  background: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-black);
 }
 
 .step.is-done .step-num {
@@ -89,7 +94,7 @@ img { display: block; max-width: 100%; }
 }
 
 .step-label { font-size: var(--text-sub); font-weight: 300; }
-.step-line { width: 32px; height: 1px; background: var(--color-line); }
+.step-line { width: 32px; height: 1px; background: var(--color-white-faint); }
 
 /* 按鈕 */
 .ghost-btn, .accent-btn {

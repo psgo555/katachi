@@ -217,6 +217,115 @@ window.KATACHI_PRODUCTS = [
     ]
   }
 ];
+function renderShopProductsFromData() {
+    const productGrid = document.getElementById('productGrid');
+    const products = Array.isArray(window.KATACHI_PRODUCTS) ? window.KATACHI_PRODUCTS : [];
+
+    if (!productGrid || products.length === 0) return;
+
+    const currency = new Intl.NumberFormat('zh-TW');
+    const escapeHtml = (value) => String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+
+    const getCategoryFallbackImage = (category) => {
+        const fallbackImages = {
+            protein: '/katachi-shop/img/Protein/protein.jpg',
+            performance: '/katachi-shop/img/Energy powder/Energy powder.jpg',
+            wellness: '/katachi-shop/img/fishoil/product.png',
+            accessories: '/katachi-shop/img/cup/black.jpg'
+        };
+
+        return fallbackImages[category] || '/katachi-shop/img/Protein/protein.jpg';
+    };
+
+    productGrid.innerHTML = products.map((product, index) => {
+        const id = escapeHtml(product.id);
+        const category = escapeHtml(product.category);
+        const name = escapeHtml(product.name);
+        const categoryLabel = escapeHtml(product.categoryLabel);
+        const description = escapeHtml(product.description || product.subtitle || '');
+        const price = Number(product.price || 0);
+        const originalPrice = product.originalPrice ? Number(product.originalPrice) : 0;
+        const rating = product.rating ?? '';
+        const fallbackImage = getCategoryFallbackImage(product.category);
+        const image = product.image || fallbackImage;
+        const stock = Number(product.stock ?? 0);
+
+        return `
+      <article class="product-card" data-id="${id}" data-category="${category}" data-name="${name}"
+        data-price="${price}" data-rating="${escapeHtml(rating)}" data-stock="${stock}"
+        data-order="${index}" role="link" tabindex="0">
+        <div class="product-thumb">
+          <img src="${escapeHtml(image)}" alt="${name}" onerror="this.onerror=null;this.src='${escapeHtml(fallbackImage)}'">
+        </div>
+        <div class="product-body">
+          <div class="product-meta"><span>${categoryLabel}</span><span>${escapeHtml(rating)}</span></div>
+          <h2 class="product-name">${name}</h2>
+          <p class="product-desc">${description}</p>
+          <div class="product-footer">
+            <div class="product-price">${currency.format(price)} ${originalPrice ? `<span>${currency.format(originalPrice)}</span>` : ''}</div>
+
+          <div class="product-stock ${stock <= 0 ? 'is-soldout' : stock <= 5 ? 'is-low' : ''}">
+                ${stock <= 0 ? '售完' : stock <= 5 ? `低庫存 ${stock}` : '庫存充足'}</div>
+
+            <button class="accent-btn add-cart-btn" type="button"
+                ${stock <= 0 ? 'disabled' : ''}>
+                ${stock <= 0 ? '售完' : '加入購物車'}
+                </button>
+
+          </div>
+        </div>
+      </article>
+    `;
+    }).join('');
+
+    window.dispatchEvent(new CustomEvent('shop-products-rendered'));
+}
+
+window.renderShopProductsFromData = renderShopProductsFromData;
+
+function mergeProductOptions(apiOptions, staticOptions) {
+    if (!Array.isArray(apiOptions) || apiOptions.length === 0) {
+        return Array.isArray(staticOptions) ? staticOptions : [];
+    }
+
+    return apiOptions.map(apiOption => {
+        const staticOption = (staticOptions || []).find(option => option.label === apiOption.label);
+        const staticValues = Array.isArray(staticOption?.values) ? staticOption.values : [];
+        const apiValues = Array.isArray(apiOption.values) ? apiOption.values : [];
+
+        return {
+            ...apiOption,
+            values: apiValues.map(apiValue => {
+                const apiText = typeof apiValue === 'object' ? apiValue.text : apiValue;
+                const staticValue = staticValues.find(value => {
+                    const staticText = typeof value === 'object' ? value.text : value;
+                    return staticText === apiText;
+                });
+
+                if (typeof apiValue !== 'object') {
+                    return staticValue || apiValue;
+                }
+
+                if (typeof staticValue !== 'object') {
+                    return apiValue;
+                }
+
+                return {
+                    ...staticValue,
+                    ...apiValue,
+                    price: apiValue.price ?? staticValue.price,
+                    originalPrice: apiValue.originalPrice ?? staticValue.originalPrice,
+                    image: apiValue.image || staticValue.image
+                };
+            })
+        };
+    });
+}
 
 // API 模擬：從後端 API 載入產品資料
 window.loadShopProductsFromApi = async function () {
@@ -242,8 +351,10 @@ window.loadShopProductsFromApi = async function () {
                 return {
                     ...staticProduct,
                     ...apiProduct,
-                    options: apiOptions.length > 0 ? apiOptions : staticOptions
+                    stock: apiProduct.stock ?? staticProduct.stock ?? 0,
+                    options: mergeProductOptions(apiOptions, staticOptions)
                 };
+
             });
 
             apiProducts.forEach(apiProduct => {
@@ -258,9 +369,13 @@ window.loadShopProductsFromApi = async function () {
             window.KATACHI_PRODUCTS = mergedProducts;
         }
 
+        renderShopProductsFromData();
         return window.KATACHI_PRODUCTS;
     } catch (error) {
         console.error('Load products from API failed:', error);
+        renderShopProductsFromData();
         return window.KATACHI_PRODUCTS;
     }
 };
+
+renderShopProductsFromData();

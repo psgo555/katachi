@@ -45,7 +45,12 @@
                 </svg>
                 <input id="searchInput" type="search" placeholder="搜尋高蛋白、肌酸、魚油">
             </label>
-            <a class="accent-btn" asp-controller="Shop" asp-action="Login">登入 / 會員</a>
+            <a class="user-chip" asp-controller="Shop" asp-action="Login" title="會員登入" aria-label="會員登入">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="9" cy="6" r="3.25" stroke="currentColor" stroke-width="2" />
+                    <path d="M1.5 17c0-4.142 3.358-7.5 7.5-7.5s7.5 3.358 7.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </a>
 
             <button class="cart-chip" id="cartToggle" type="button" aria-expanded="false" aria-controls="cartOverlay">
                 <!-- 購物車icon -->
@@ -140,7 +145,6 @@
               <div class="eyebrow">Bundle Pick</div>
               <h2>DAILY STACK<br>START SET</h2>
               <p>先把最常見的補給組起來。從訓練後蛋白、力量期肌酸，到平常保養用的魚油與綜合維他命一次補齊。</p>
-              <button class="accent-btn" type="button">加入整組</button>
             </div>
           </div>
           <div class="featured-panel">
@@ -149,9 +153,9 @@
                 style="background: var(--color-accent-soft); color: var(--color-black); border-color: transparent;">
                 本週組合價</div>
               <h3>補給入門組</h3>
-              <p>乳清蛋白、肌酸、魚油與搖搖杯一次備齊，適合剛開始規律訓練、想把基本補給先建立起來的使用者。</p>
+              <p><strong>乳清蛋白、肌酸、魚油</strong>與<strong>搖搖杯</strong>一次備齊，適合剛開始規律訓練、想把基本補給先建立起來的使用者。</p>
               <div class="deal-price">NT$ 3,280 <span>NT$ 3,940</span></div>
-              <button class="accent-btn" type="button">直接結帳</button>
+              <button class="accent-btn" id="bundleCheckoutBtn" type="button">直接結帳</button>
             </div>
             <div class="service-box">
               <h3>現貨出貨 / 效期標示</h3>
@@ -174,133 +178,6 @@
 
         <!-- 商品列表 -->
         <div class="product-grid" id="productGrid">
-          <article class="product-card" data-id="whey-isolate" data-category="protein" data-name="分離乳清蛋白"
-            data-price="1680" data-rating="4.9">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/Protein/protein.jpg" alt="分離乳清蛋白">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>高蛋白</span><span>4.9</span></div>
-              <h2 class="product-name">分離乳清蛋白 2LB</h2>
-              <p class="product-desc">每份 26g 蛋白質，乳糖較低、好沖泡，適合訓練後補充與日常拉高蛋白攝取。</p>
-              <div class="product-footer">
-                <div class="product-price">1,680 <span>1,950</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="casein" data-category="protein" data-name="酪蛋白" data-price="1580"
-            data-rating="4.8">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/dark whey protein/dark whey protein.jpg" alt="酪蛋白">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>高蛋白</span><span>4.8</span></div>
-              <h2 class="product-name">夜間酪蛋白 2LB</h2>
-              <p class="product-desc">釋放速度較慢，適合睡前或兩餐間補充，讓整天蛋白質分配更穩定。</p>
-              <div class="product-footer">
-                <div class="product-price">1,580 <span>1,820</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="pre-workout" data-category="performance" data-name="訓練前補給"
-            data-price="1280" data-rating="4.7">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/Energy powder/engry powder.png" alt="訓練前補給">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>訓練補給</span><span>4.7</span></div>
-              <h2 class="product-name">訓練前能量粉</h2>
-              <p class="product-desc">咖啡因與瓜胺酸配方，適合重量訓練前提升專注與發力感，晚間訓練者可斟酌使用。</p>
-              <div class="product-footer">
-                <div class="product-price">1,280 <span>1,480</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="bcaa" data-category="performance" data-name="BCAA 胺基酸" data-price="980"
-            data-rating="4.6">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/BCAA/BCAA.png" alt="BCAA 胺基酸">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>訓練補給</span><span>4.6</span></div>
-              <h2 class="product-name">支鏈胺基酸 BCAA</h2>
-              <p class="product-desc">適合長時間訓練或減脂期搭配飲用，口感清爽，幫助補水與訓練中補給。</p>
-              <div class="product-footer">
-                <div class="product-price">980 <span>1,180</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="fish-oil" data-category="wellness" data-name="魚油" data-price="1180"
-            data-rating="4.8">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/fishoil/fishoil.png" alt="魚油">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>日常營養</span><span>4.8</span></div>
-              <h2 class="product-name">高濃度魚油膠囊</h2>
-              <p class="product-desc">主打 EPA / DHA 含量清楚標示，適合平常飲食油脂攝取失衡的人做日常保養。</p>
-              <div class="product-footer">
-                <div class="product-price">1,180 <span>1,360</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="multivitamin" data-category="wellness" data-name="綜合維他命"
-            data-price="880" data-rating="4.5">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/vitamin.png" alt="綜合維他命">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>日常營養</span><span>4.5</span></div>
-              <h2 class="product-name">綜合維他命錠</h2>
-              <p class="product-desc">針對訓練者常見的基礎營養補充需求設計，適合忙碌、外食比例高的日常使用。</p>
-              <div class="product-footer">
-                <div class="product-price">880 <span>990</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="creatine" data-category="performance" data-name="肌酸" data-price="980"
-            data-rating="4.9">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/Creatine.png" alt="肌酸">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>訓練補給</span><span>4.9</span></div>
-              <h2 class="product-name">微粉化肌酸</h2>
-              <p class="product-desc">無香料設計，易混合、易堆疊，適合力量訓練與高強度間歇週期使用。</p>
-              <div class="product-footer">
-                <div class="product-price">980 <span>1,180</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product-card" data-id="shaker-bottle" data-category="accessories" data-name="搖搖杯"
-            data-price="399" data-rating="4.4">
-            <div class="product-thumb">
-              <img src="~/katachi-shop/img/cup/black.jpg" alt="搖搖杯">
-            </div>
-            <div class="product-body">
-              <div class="product-meta"><span>沖泡配件</span><span>4.4</span></div>
-              <h2 class="product-name">刻度搖搖杯 700ml</h2>
-              <p class="product-desc">附刻度與濾網，適合乳清、肌酸與訓練中飲品使用，外出攜帶也比較直覺。</p>
-              <div class="product-footer">
-                <div class="product-price">399 <span>520</span></div>
-                <button class="accent-btn add-cart-btn" type="button">加入購物車</button>
-              </div>
-            </div>
-          </article>
         </div>
 
         <!-- 補充購物資訊 -->

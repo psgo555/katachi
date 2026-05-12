@@ -21,13 +21,14 @@ const discountValue = document.getElementById('discountValue');
 const totalValue = document.getElementById('totalValue');
 const checkoutBtn = document.getElementById('checkoutBtn');
 const clearCartBtn = document.getElementById('clearCartBtn');
+const bundleCheckoutBtn = document.getElementById('bundleCheckoutBtn');
 const backHomeBtn = document.getElementById('backHomeBtn');
 const heroSlider = document.getElementById('heroSlider');
 const heroSlides = Array.from(document.querySelectorAll('.hero-slide'));
 const heroDots = Array.from(document.querySelectorAll('.hero-slider__dot'));
 const heroPrev = document.getElementById('heroPrev');
 const heroNext = document.getElementById('heroNext');
-const products = Array.from(productGrid.querySelectorAll('.product-card'));
+let products = Array.from(productGrid.querySelectorAll('.product-card'));
 const CART_STORAGE_KEY = 'katachi-cart-v1';
 const OPEN_CART_KEY = 'katachi-open-cart';
 
@@ -42,21 +43,35 @@ const currency = new Intl.NumberFormat('zh-TW');
 
 // 三、資料整理區
 // 先整理出商品資料表，讓購物車渲染與價格計算都共用同一份資料。
-const productMap = new Map(
-  products.map((card) => {
-    const id = card.dataset.id;
-    const image = card.querySelector('.product-thumb img');
-    const meta = card.querySelector('.product-meta span');
-    return [id, {
-      id,
-      name: card.querySelector('.product-name').textContent.trim(),
-      subtitle: meta ? meta.textContent.trim() : '',
-      price: Number(card.dataset.price || 0),
-      image: image ? image.src : '',
-      alt: image ? image.alt : card.dataset.name
-    }];
-  })
-);
+let productMap = new Map();
+
+function refreshProductsFromDom() {
+  products = Array.from(productGrid.querySelectorAll('.product-card'));
+
+  products.forEach((card, index) => {
+    card.dataset.order = card.dataset.order || String(index);
+    card.setAttribute('role', 'link');
+    card.tabIndex = 0;
+  });
+
+  productMap = new Map(
+    products.map((card) => {
+      const id = card.dataset.id;
+      const image = card.querySelector('.product-thumb img');
+      const meta = card.querySelector('.product-meta span');
+      return [id, {
+        id,
+        name: card.querySelector('.product-name').textContent.trim(),
+        subtitle: meta ? meta.textContent.trim() : '',
+        price: Number(card.dataset.price || 0),
+        image: image ? image.src : '',
+        alt: image ? image.alt : card.dataset.name
+      }];
+    })
+  );
+}
+
+refreshProductsFromDom();
 
 // 將商品卡資料整理成購物車可直接使用的結構。
 function buildCartItemFromProduct(productId, overrides = {}) {
@@ -72,6 +87,24 @@ function buildCartItemFromProduct(productId, overrides = {}) {
     image: overrides.image || product.image,
     alt: overrides.alt || product.alt,
     qty: Math.max(1, Number(overrides.qty) || 1)
+  };
+}
+
+function buildStarterBundleCartItem() {
+  refreshProductsFromDom();
+  const baseProduct = productMap.get('whey-isolate')
+    || productMap.get('creatine')
+    || productMap.values().next().value;
+
+  return {
+    key: 'bundle-starter-set',
+    id: 'bundle-starter-set',
+    name: '補給入門組',
+    subtitle: '乳清蛋白 / 肌酸 / 魚油 / 搖搖杯',
+    price: 3280,
+    image: baseProduct?.image || '/katachi-shop/img/Protein/protein.jpg',
+    alt: '補給入門組',
+    qty: 1
   };
 }
 
@@ -103,8 +136,8 @@ function saveCartState() {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartState));
 }
 
-// 讀取購物車；若是第一次進站才建立預設資料。
-function readCartState({ seedDefault = true } = {}) {
+// 讀取購物車；正式購物流程不再自動建立示範商品。
+function readCartState({ seedDefault = false } = {}) {
   const raw = localStorage.getItem(CART_STORAGE_KEY);
 
   if (raw === null) {
@@ -304,9 +337,14 @@ function renderCart() {
   }
 
   // 將購物車每筆商品渲染成html字串
-    summaryList.innerHTML = items.map((item) => `
+    summaryList.innerHTML = items.map((item) => {
+      const itemHref = item.id?.startsWith('bundle-')
+        ? '/Shop'
+        : `/Shop/ProductDetail?id=${encodeURIComponent(item.id)}`;
+
+      return `
         <div class="summary-item" data-cart-key="${item.key}">
-          <a href="/Shop/ProductDetail?id=${encodeURIComponent(item.id)}" class="summary-item__thumb">
+          <a href="${itemHref}" class="summary-item__thumb">
             <img src="${item.image}" alt="${item.alt}">
           </a>
 
@@ -322,7 +360,8 @@ function renderCart() {
           </div>
           <strong class="summary-price">${formatMoney(item.price * item.qty)}</strong>
         </div>
-      `).join('');
+      `;
+    }).join('');
 }
 
 // 商品卡加入購物車時，若同商品已存在就直接累加數量。
@@ -364,6 +403,40 @@ function clearCart() {
   renderCart();
 }
 
+function addStarterBundle({ openCart = true } = {}) {
+  const bundleItem = buildStarterBundleCartItem();
+  addCartItem(bundleItem);
+  showAddCartFeedback(bundleItem.name);
+  if (openCart) setCartOpen(true);
+}
+
+let cartFeedbackTimer = null;
+
+function showAddCartFeedback(productName) {
+  let toast = document.querySelector('.cart-feedback-toast');
+
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'cart-feedback-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = `${productName || '商品'} 已加入購物車`;
+  toast.classList.remove('is-visible');
+  window.requestAnimationFrame(() => toast.classList.add('is-visible'));
+
+  cartCount.classList.remove('is-bumping');
+  window.requestAnimationFrame(() => cartCount.classList.add('is-bumping'));
+
+  clearTimeout(cartFeedbackTimer);
+  cartFeedbackTimer = setTimeout(() => {
+    toast.classList.remove('is-visible');
+    cartCount.classList.remove('is-bumping');
+  }, 1800);
+}
+
 // 八、商品列表篩選 / 排序區
 
 // 模糊字串搜尋：完整命中優先，否則只要有任一字元對到也算符合。
@@ -381,6 +454,7 @@ function matchesSearchKeyword(keyword, text) {
 
 // 先做分類與搜尋過濾，再套用目前的排序方式。
 function applyFilters() {
+  refreshProductsFromDom();
   const keyword = searchInput.value.trim();
 
   products.forEach((card) => {
@@ -420,7 +494,18 @@ function handleCategoryClick(event) {
 
 categoryRow.addEventListener('click', handleCategoryClick);
 
-searchInput.addEventListener('input', applyFilters);
+['input', 'keyup', 'change', 'search', 'compositionend'].forEach((eventName) => {
+  searchInput.addEventListener(eventName, applyFilters);
+});
+
+window.addEventListener('shop-products-rendered', () => {
+  refreshProductsFromDom();
+  applyFilters();
+  renderCart();
+});
+
+window.applyShopFilters = applyFilters;
+window.refreshShopProductsFromDom = refreshProductsFromDom;
 
 // 排序切換時，重新依目前分類 / 搜尋條件下的商品做排序。
 sortSelect.addEventListener('change', () => {
@@ -428,13 +513,32 @@ sortSelect.addEventListener('change', () => {
   scrollToProducts();
 });
 
+bundleCheckoutBtn?.addEventListener('click', () => {
+  addStarterBundle({ openCart: false });
+  window.location.href = '/Shop/Checkout';
+});
+
 // 從商品列表加入購物車，並直接打開右側抽屜。
 productGrid.addEventListener('click', (event) => {
   const button = event.target.closest('.add-cart-btn');
   if (button) {
+    // 阻止按鈕預設行為
+    event.preventDefault();
+    // 避免點擊事件冒泡到商品卡，導致同時觸發開啟商品詳細頁的行為
+    event.stopPropagation();
+
+    // 如果按鈕被禁用（例如庫存不足），就不執行任何動作
+    if (button.disabled) return;
+
     const card = button.closest('.product-card');
     if (!card?.dataset.id) return;
-    addCartItem(buildCartItemFromProduct(card.dataset.id));
+
+    const stock = Number(card.dataset.stock ?? 0);
+    if (stock <= 0) return;
+
+    const cartItem = buildCartItemFromProduct(card.dataset.id);
+    addCartItem(cartItem);
+    showAddCartFeedback(cartItem?.name);
     setCartOpen(true);
     return;
   }
@@ -569,4 +673,3 @@ async function initShopPage() {
 }
 
 initShopPage();
-

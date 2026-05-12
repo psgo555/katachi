@@ -14,12 +14,20 @@ body {
 
 /* ── Topbar (reuse checkout style) ── */
 .checkout-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-20) var(--page-gutter-lg);
-  border-bottom: var(--border-default);
-  background: var(--color-bg);
+  width: 100%;
+  margin: 0 auto;
+  padding: 14px var(--page-gutter-lg);
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-white-faint);
+  background: var(--color-black);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
   gap: var(--space-24);
 }
 
@@ -31,7 +39,7 @@ body {
   font-weight: var(--weight-black);
   font-size: 1.4rem;
   letter-spacing: var(--tracking-logo);
-  color: var(--color-black);
+  color: var(--color-white);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -64,8 +72,8 @@ body {
   color: var(--color-grey-mute);
 }
 
-.step.is-done { color: var(--color-black); }
-.step.is-active { color: var(--color-black); font-weight: var(--weight-medium); }
+.step.is-done { color: var(--color-accent); }
+.step.is-active { color: var(--color-white); font-weight: var(--weight-medium); }
 
 .step-num {
   width: 28px;
@@ -80,21 +88,21 @@ body {
 }
 
 .step.is-done .step-num {
-  background: var(--color-black);
-  border-color: var(--color-black);
-  color: var(--color-white);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-black);
 }
 
 .step.is-active .step-num {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
+  background: var(--color-white);
+  border-color: var(--color-white);
   color: var(--color-black);
 }
 
 .step-line {
   width: 40px;
   height: 1px;
-  background: var(--color-line);
+  background: var(--color-white-faint);
   margin: 0 var(--space-8);
 }
 
@@ -112,6 +120,16 @@ body {
 }
 
 .ghost-btn:hover { border-color: var(--color-black); }
+
+.checkout-topbar .ghost-btn {
+  border-color: rgba(255, 255, 255, 0.85);
+  color: var(--color-white);
+}
+
+.checkout-topbar .ghost-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
 
 /* ── Main ── */
 .complete-page {

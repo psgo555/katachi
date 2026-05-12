@@ -10,13 +10,18 @@ namespace WorkOutMvcBlank.Data
         {
         }
 
-        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Category> Categories { get; set; }
 
-        public DbSet<Product> Products => Set<Product>();
+        public DbSet<Product> Products { get; set; }
 
-        public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
+        public DbSet<ProductOption> ProductOptions { get; set; }
 
-        public DbSet<ProductOptionValue> ProductOptionValues => Set<ProductOptionValue>();
+        public DbSet<ProductOptionValue> ProductOptionValues { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
+
 
     }
 }

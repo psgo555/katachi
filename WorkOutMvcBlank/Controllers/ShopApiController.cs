@@ -33,6 +33,7 @@ namespace WorkOutMvcBlank.Controllers
                     description = p.Description,
                     price = p.Price,
                     originalPrice = p.OriginalPrice,
+                    stock = p.Stock,
                     rating = p.Rating,
                     image = p.ImageUrl,
                     options = p.Options

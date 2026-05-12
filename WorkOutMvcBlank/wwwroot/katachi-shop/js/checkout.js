@@ -201,38 +201,68 @@ document.querySelectorAll('.field-input').forEach(el => {
 });
 
 // ── 下單 ──
-placeOrderBtn?.addEventListener('click', () => {
-  if (!validateForm()) return;
+placeOrderBtn?.addEventListener('click', async () => {
+    if (placeOrderBtn.disabled) return;
+    if (!validateForm()) return;
 
-  const num   = '#KT-' + Math.floor(100000 + Math.random() * 900000);
-  const items = readCart();
-  const sub   = items.reduce((s, i) => s + i.price * i.qty, 0);
-  const ship  = getShippingFee(sub);
-  const mem   = sub >= 3000 ? 300 : 0;
-  const total = Math.max(0, sub + ship - mem - couponDiscount);
+    const items = readCart();
+    if (items.length === 0) return;
 
-  // 儲存訂單資料，order-complete.html 讀取顯示
-  const orderData = {
-    orderNumber: num,
-    items,
-    subtotal: sub,
-    shipping: ship,
-    memberDiscount: mem,
-    couponDiscount,
-    total,
-    recipient: {
-      name:    document.getElementById('lastName').value.trim() + ' ' + document.getElementById('firstName').value.trim(),
-      phone:   document.getElementById('phone').value.trim(),
-      email:   document.getElementById('email').value.trim(),
-      address: document.getElementById('address').value.trim() + '　' + document.getElementById('city').value,
+    const sub = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const ship = getShippingFee(sub);
+    const mem = sub >= 3000 ? 300 : 0;
+    const total = Math.max(0, sub + ship - mem - couponDiscount);
+
+    // 整理訂單資料，先送到 MVC API 寫入資料庫
+    const orderData = {
+        items,
+        subtotal: sub,
+        shipping: ship,
+        memberDiscount: mem,
+        couponDiscount,
+        total,
+        recipient: {
+            name: document.getElementById('lastName').value.trim() + ' ' + document.getElementById('firstName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            address: document.getElementById('address').value.trim() + '　' + document.getElementById('city').value,
+        }
+    };
+
+    placeOrderBtn.disabled = true;
+    placeOrderBtn.textContent = '訂單送出中...';
+
+    try {
+        const response = await fetch('/api/shop/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            const message = await response.text();
+            alert(message || '訂單建立失敗，請稍後再試。');
+            return;
+        }
+
+        const result = await response.json();
+
+        orderData.orderNumber = result.orderNumber;
+        sessionStorage.setItem('katachi-order', JSON.stringify(orderData));
+
+        // 清空購物車並跳轉至完成頁
+        localStorage.setItem(CART_STORAGE_KEY, '[]');
+        window.location.href = '/Shop/OrderComplete';
+    } catch (error) {
+        alert('訂單送出失敗，請檢查網路或稍後再試。');
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = '確認下單';
     }
-  };
-  sessionStorage.setItem('katachi-order', JSON.stringify(orderData));
 
-  // 清空購物車並跳轉至完成頁
-  localStorage.removeItem(CART_STORAGE_KEY);
-    window.location.href = '/Shop/OrderComplete';
 });
+
 
 // ── 初始化 ──
 async function initCheckoutPage() {

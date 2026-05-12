@@ -19,6 +19,7 @@
         public int Price { get; set; }
 
         public int? OriginalPrice { get; set; }
+        public int Stock { get; set; }
 
         public decimal? Rating { get; set; }
 

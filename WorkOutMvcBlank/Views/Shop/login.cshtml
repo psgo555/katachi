@@ -15,21 +15,30 @@
 </head>
 
 <body>
+  <header class="auth-shop-nav">
+    <a class="auth-shop-brand" asp-controller="Shop" asp-action="Index">
+      KATACH
+      <span class="auth-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="0" width="24" height="7" rx="1.5" fill="currentColor" />
+          <rect x="0" y="9" width="28" height="9" rx="2" fill="currentColor" />
+          <rect x="11" y="20" width="6" height="40" fill="currentColor" />
+          <rect x="0" y="62" width="28" height="9" rx="2" fill="currentColor" />
+          <rect x="2" y="73" width="24" height="7" rx="1.5" fill="currentColor" />
+        </svg>
+      </span>
+      SHOP
+    </a>
+    <nav class="auth-shop-actions" aria-label="會員導覽">
+      <a class="auth-nav-link" asp-controller="Shop" asp-action="Index">商店</a>
+      <a class="auth-nav-link is-active" asp-controller="Shop" asp-action="Login">會員</a>
+    </nav>
+  </header>
+
   <div class="login-shell">
     <!-- 左側視覺區：品牌、標題與快速入口 -->
     <section class="login-visual">
-        <a class="brand" asp-controller="Shop" asp-action="Index">
-            KATACH
-            <span class="brand-mark" aria-hidden="true">
-                <svg viewBox="0 0 28 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="0" width="24" height="7" rx="1.5" fill="currentColor" />
-                    <rect x="0" y="9" width="28" height="9" rx="2" fill="currentColor" />
-                    <rect x="11" y="20" width="6" height="40" fill="currentColor" />
-                    <rect x="0" y="62" width="28" height="9" rx="2" fill="currentColor" />
-                    <rect x="2" y="73" width="24" height="7" rx="1.5" fill="currentColor" />
-                </svg>
-            </span>
-        </a>
+      <div class="visual-top-spacer" aria-hidden="true"></div>
 
       <div class="visual-copy">
         <div class="eyebrow">Member Access</div>

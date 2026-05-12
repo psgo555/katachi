@@ -76,10 +76,11 @@ function getOptionText(optionValue) {
   return typeof optionValue === 'object' ? optionValue.text : optionValue;
 }
 
-// 如果選到的是規格 / 容量這類選項，就把價格一起更新。
+// 如果選到的選項值本身有價格，就把價格一起更新。
+// 這樣不只「規格 / 容量」，像「份量」這種資料庫命名也能正常改價。
 function updatePriceByOption(option, optionValue) {
   if (typeof optionValue !== 'object') return;
-  if (!['規格', '容量'].includes(option.label)) return;
+  if (optionValue.price == null && optionValue.originalPrice == null) return;
 
   currentPrice = optionValue.price ?? product.price;
   currentOriginalPrice = optionValue.originalPrice ?? product.originalPrice;
@@ -156,6 +157,33 @@ function addCurrentProductToCart() {
 
   saveCartState(cartItems);
   updateDetailCartCount();
+}
+
+let detailCartFeedbackTimer = null;
+
+function showDetailAddCartFeedback(productName) {
+  let toast = document.querySelector('.cart-feedback-toast');
+
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'cart-feedback-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = `${productName || '商品'} 已加入購物車`;
+  toast.classList.remove('is-visible');
+  window.requestAnimationFrame(() => toast.classList.add('is-visible'));
+
+  detailCartCount?.classList.remove('is-bumping');
+  window.requestAnimationFrame(() => detailCartCount?.classList.add('is-bumping'));
+
+  clearTimeout(detailCartFeedbackTimer);
+  detailCartFeedbackTimer = setTimeout(() => {
+    toast.classList.remove('is-visible');
+    detailCartCount?.classList.remove('is-bumping');
+  }, 1800);
 }
 
 // 依照單一選項資料，建立一組按鈕，例如口味、容量、規格。
@@ -300,9 +328,17 @@ function renderProduct() {
     detailOptions.appendChild(createOptionGroup(option));
   });
 
-  buildThumbs();
-  updateDisplayedPrice();
-  renderSummary();
+    buildThumbs();
+    updateDisplayedPrice();
+
+    const isSoldOut = (product.stock ?? 0) <= 0;
+    detailAddCart.disabled = isSoldOut;
+    detailBuyNow.disabled = isSoldOut;
+    detailAddCart.textContent = isSoldOut ? '售完' : '加入購物車';
+    detailBuyNow.textContent = isSoldOut ? '售完' : '立即購買';
+
+    renderSummary();
+
 }
 
 // 數量減少，最少只能到 1。
@@ -319,16 +355,23 @@ qtyIncrease.addEventListener('click', () => {
 
 // detail 頁也真的寫入購物車，而不是只顯示提示文字。
 detailAddCart.addEventListener('click', () => {
-  addCurrentProductToCart();
-  renderSummary();
-  detailSummary.textContent = `${detailSummary.textContent} / 已加入購物車`;
+    if ((product.stock ?? 0) <= 0) return;
+
+    addCurrentProductToCart();
+    showDetailAddCartFeedback(product?.name);
+    renderSummary();
+    detailSummary.textContent = `${detailSummary.textContent} / 已加入購物車`;
 });
 
-// 目前先用摘要文字模擬立即購買流程。
+
+// 立即購買：先加入購物車，再前往結帳頁。
 detailBuyNow.addEventListener('click', () => {
-  addCurrentProductToCart();
+    if ((product.stock ?? 0) <= 0) return;
+
+    addCurrentProductToCart();
     window.location.href = '/Shop/Checkout';
 });
+
 
 // ── 購物車抽屜開關 ──
 function setCartOpen(isOpen) {
