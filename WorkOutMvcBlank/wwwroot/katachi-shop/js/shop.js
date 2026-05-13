@@ -162,7 +162,7 @@ let cartState = readCartState();
 const categoryMeta = {
   all: {
     title: '全部商品',
-    copy: '目前顯示全部補給品、營養品與沖泡配件，方便先快速瀏覽完整商品列表。（瀏覽圖皆為示意圖）'
+    copy: '目前顯示全部補給品、營養品、運動用品與沖泡配件，方便先快速瀏覽完整商品列表。（瀏覽圖皆為示意圖）'
   },
   protein: {
     title: '高蛋白',
@@ -175,6 +175,10 @@ const categoryMeta = {
   wellness: {
     title: '日常營養',
     copy: '魚油與綜合維他命這類日常保養商品會集中顯示，方便和訓練補給做區隔。'
+  },
+  sports: {
+    title: '運動用品',
+    copy: '啞鈴與訓練器材會集中顯示，適合想補齊居家訓練設備的人快速瀏覽。'
   },
   accessories: {
     title: '沖泡配件',

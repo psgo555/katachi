@@ -27,6 +27,9 @@ const detailDescription = document.getElementById('detailDescription');
 const detailPrice = document.getElementById('detailPrice');
 const detailOriginalPrice = document.getElementById('detailOriginalPrice');
 const detailOptions = document.getElementById('detailOptions');
+const detailHighlights = document.getElementById('detailHighlights');
+const productInfoSection = document.getElementById('productInfoSection');
+const productInfoGrid = document.getElementById('productInfoGrid');
 const detailSummary = document.getElementById('detailSummary');
 const qtyDecrease = document.getElementById('qtyDecrease');
 const qtyIncrease = document.getElementById('qtyIncrease');
@@ -252,6 +255,76 @@ function buildStarsHTML(rating) {
   return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
 }
 
+function renderProductInfoSections() {
+  const sections = Array.isArray(product.detailSections) ? product.detailSections : [];
+
+  if (!productInfoSection || !productInfoGrid) return;
+
+  productInfoGrid.innerHTML = '';
+  productInfoSection.hidden = sections.length === 0;
+
+  sections.forEach((section) => {
+    const card = document.createElement('article');
+    card.className = 'product-info-card';
+
+    const media = document.createElement('div');
+    media.className = 'product-info-media';
+
+    const image = document.createElement('img');
+    image.src = section.image || product.image;
+    image.alt = section.title || product.name;
+    media.appendChild(image);
+
+    const title = document.createElement('h3');
+    title.className = 'product-info-title';
+    title.textContent = section.title || product.name;
+
+    const price = document.createElement('div');
+    price.className = 'product-info-price';
+    price.textContent = section.priceText || '';
+
+    const swatches = document.createElement('div');
+    swatches.className = 'product-info-swatches';
+    (section.colors || []).forEach((color) => {
+      const swatch = document.createElement('span');
+      swatch.className = 'product-info-swatch';
+      swatch.style.setProperty('--swatch-color', color);
+      swatches.appendChild(swatch);
+    });
+
+    const weight = document.createElement('p');
+    weight.className = 'product-info-weight';
+    weight.textContent = section.weightText || '';
+
+    const specs = document.createElement('div');
+    specs.className = 'product-info-specs';
+    (section.specs || []).forEach((line, index) => {
+      const row = index === 0 ? document.createElement('strong') : document.createElement('span');
+      row.textContent = line;
+      specs.appendChild(row);
+    });
+
+    card.append(media, title, price, swatches, weight, specs);
+    productInfoGrid.appendChild(card);
+  });
+}
+
+function renderProductHighlights() {
+  const highlights = Array.isArray(product.highlights) ? product.highlights : [];
+
+  if (!detailHighlights) return;
+
+  detailHighlights.innerHTML = '';
+  detailHighlights.hidden = highlights.length === 0;
+
+  highlights.forEach((text) => {
+    const item = document.createElement('div');
+    item.className = 'detail-highlight-item';
+    item.textContent = text;
+    detailHighlights.appendChild(item);
+  });
+}
+
 // 建立縮圖列（只取有圖片的口味選項）。
 function buildThumbs() {
   if (!detailThumbs) return;
@@ -303,6 +376,7 @@ function buildThumbs() {
 function renderProduct() {
   if (!product) return;
 
+  document.body.dataset.productId = product.id;
   document.title = `${product.name} | KATACHI SHOP`;
   detailImage.src = product.image;
   detailImage.alt = product.name;
@@ -337,6 +411,8 @@ function renderProduct() {
     detailAddCart.textContent = isSoldOut ? '售完' : '加入購物車';
     detailBuyNow.textContent = isSoldOut ? '售完' : '立即購買';
 
+    renderProductHighlights();
+    renderProductInfoSections();
     renderSummary();
 
 }

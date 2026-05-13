@@ -10,6 +10,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.9,
     image: '/katachi-shop/img/Protein/myprotein.jpg',
     description: '每份 26g 蛋白質，乳糖較低、好沖泡，適合訓練後補充與日常拉高蛋白攝取。',
+    highlights: [
+      '每份提供高蛋白補給，適合訓練後恢復',
+      '乳糖較低，口感清爽好入口',
+      '粉體容易沖泡，不易結塊',
+      '純度高、好吸收、低熱量'
+    ],
     options: [
       {
         label: '口味',
@@ -39,6 +45,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.8,
       image: '/katachi-shop/img/dark whey protein/dark whey protein.jpg',
     description: '釋放速度較慢，適合睡前或兩餐間補充，讓整天蛋白質分配更穩定。',
+    highlights: [
+      '慢釋放蛋白，適合睡前補充',
+      '幫助拉長兩餐之間的蛋白質供應',
+      '適合增肌期與日常蛋白質管理',
+      '能為身體長時間提供穩定的胺基酸來源'
+    ],
     options: [
       {
         label: '口味',
@@ -68,6 +80,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.7,
       image: '/katachi-shop/img/Energy powder/Energy powder.jpg',
     description: '咖啡因與瓜胺酸配方，適合重量訓練前提升專注與發力感，晚間訓練者可斟酌使用。',
+    highlights: [
+      '訓練前補給，提升專注與發力感',
+      '咖啡因與瓜胺酸配方設計',
+      '適合重量訓練與高強度訓練前使用',
+      '可依耐受度選擇標準版或高咖啡因版'
+    ],
     options: [
       {
         label: '口味',
@@ -97,6 +115,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.6,
     image: '/katachi-shop/img/BCAA/lemon.png',
     description: '適合長時間訓練或減脂期搭配飲用，口感清爽，幫助補水與訓練中補給。',
+    highlights: [
+      '適合訓練中補水與胺基酸補給',
+      '清爽口味，減脂期也容易搭配',
+      '長時間訓練時可分次飲用',
+      '有效促進肌肉合成、修復受損組織、延緩運動疲勞'
+    ],
     options: [
       {
         label: '口味',
@@ -126,6 +150,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.8,
       image: '/katachi-shop/img/fishoil/product.png',
     description: '主打 EPA / DHA 含量清楚標示，適合平常飲食油脂攝取失衡的人做日常保養。',
+    highlights: [
+      'EPA / DHA 含量清楚標示',
+      '適合外食族與油脂攝取不均者',
+      '日常保養可與訓練補給一起搭配',
+      '抗發炎、保護心血管、促進腦部健康及維護視力等作用'
+    ],
     options: [
       {
         label: '容量',
@@ -134,7 +164,13 @@ window.KATACHI_PRODUCTS = [
           { text: '180 顆', price: 1980, originalPrice: 2280 }
         ]
       },
-      { label: '濃度', values: ['標準濃度', '高濃度'] }
+      {
+        label: '濃度',
+        values: [
+          { text: '標準濃度', price: 1180, originalPrice: 1360 },
+          { text: '高濃度', price: 1480, originalPrice: 1680 }
+        ]
+      }
     ]
   },
   // 產品：綜合維他命錠
@@ -148,6 +184,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.5,
     image: '/katachi-shop/img/vitamin2.png',
     description: '針對訓練者常見的基礎營養補充需求設計，適合忙碌、外食比例高的日常使用。',
+    highlights: [
+      '補足日常基礎營養需求',
+      '適合忙碌、外食比例高的生活型態',
+      '可作為訓練者每日保養搭配',
+      '有助於維持能量正常代謝'
+    ],
     options: [
       {
         label: '容量',
@@ -170,6 +212,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.9,
     image: '/katachi-shop/img/creatine/normal.png',
     description: '無香料設計，易混合、易堆疊，適合力量訓練與高強度間歇週期使用。',
+    highlights: [
+      '微粉化設計，較容易混合飲品',
+      '無香料可與乳清或飲料堆疊',
+      '適合力量訓練與高強度週期',
+      '快速提供肌肉能量'
+    ],
     options: [
       {
         label: '口味',
@@ -187,6 +235,40 @@ window.KATACHI_PRODUCTS = [
       }
     ]
   },
+  // 產品：可調式啞鈴
+  {
+    id: 'adjustable-dumbbell',
+    category: 'sports',
+    categoryLabel: '運動用品',
+    name: '可調式啞鈴',
+    price: 5880,
+    originalPrice: 6280,
+    rating: 4.7,
+    stock: 12,
+    image: '/katachi-shop/img/dumbbel.jpg',
+    description: '旋鈕式重量調整，適合居家重量訓練，能用一組器材完成全身訓練。',
+    highlights: [
+      '每2.5kg可調整，快速切換訓練重量',
+      '一組取代多組固定式啞鈴，節省居家空間',
+      '防滑金屬握把，搭配穩固底座收納',
+      '適合全身輔助訓練'
+    ],
+    options: [
+      {
+        label: '重量',
+        values: [
+            { text: '可調式啞鈴32KG一對 ', price: 7990, originalPrice: 8590 },
+        ]
+      },
+      {
+        label: '顏色',
+        values: [
+            { text: '霧黑', image: '/katachi-shop/img/dumbbel/black.jpg' },
+            { text: '石墨灰', image: '/katachi-shop/img/dumbbel/gray.jpg' }
+        ]
+      }
+    ],
+  },
   // 產品：刻度搖搖杯
   {
     id: 'shaker-bottle',
@@ -198,6 +280,12 @@ window.KATACHI_PRODUCTS = [
     rating: 4.4,
     image: '/katachi-shop/img/cup/black.jpg',
     description: '附刻度與濾網，適合乳清、肌酸與訓練中飲品使用，外出攜帶也比較直覺。',
+    highlights: [
+      '附刻度設計，方便掌握水量',
+      '內建濾網，沖泡乳清更均勻',
+      '適合乳清、肌酸與訓練中飲品',
+      '可依使用量選擇 700ml 或 1000ml'
+    ],
     options: [
       {
         label: '顏色',
@@ -236,6 +324,7 @@ function renderShopProductsFromData() {
             protein: '/katachi-shop/img/Protein/protein.jpg',
             performance: '/katachi-shop/img/Energy powder/Energy powder.jpg',
             wellness: '/katachi-shop/img/fishoil/product.png',
+            sports: '/katachi-shop/img/dumbbel/black.jpg',
             accessories: '/katachi-shop/img/cup/black.jpg'
         };
 
@@ -351,6 +440,8 @@ window.loadShopProductsFromApi = async function () {
                 return {
                     ...staticProduct,
                     ...apiProduct,
+                    highlights: staticProduct.highlights || apiProduct.highlights || [],
+                    detailSections: staticProduct.detailSections || apiProduct.detailSections || [],
                     stock: apiProduct.stock ?? staticProduct.stock ?? 0,
                     options: mergeProductOptions(apiOptions, staticOptions)
                 };
